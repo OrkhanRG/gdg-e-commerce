@@ -6,7 +6,9 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DashboardController;
 
+/* ---Front--- */
 Route::get('/', [FrontController::class, 'index'])->name('front.index');
 
 Route::get('/sifarislerim', [OrderController::class, 'myOrders'])->name('my-orders');
@@ -18,3 +20,8 @@ Route::get('/mehsullar/detal', [ProductController::class, 'prodcutDetail'])->nam
 Route::get('/sebet', [CardController::class, 'card'])->name('card');
 
 Route::get('/faktura', [CheckoutController::class, 'checkout'])->name('checkout');
+
+/* ---Admin--- */
+Route::prefix('admin')->name('admin.')->group(function (){
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
+});
