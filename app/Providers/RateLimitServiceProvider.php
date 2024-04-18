@@ -22,7 +22,7 @@ class RateLimitServiceProvider extends ServiceProvider
     public function boot(): void
     {
         RateLimiter::for('registration', function ($job) {
-            return Limit::perHour(1)->by($job->ip());
+            return Limit::perHour(100)->by($job->ip());
         });
 
         RateLimiter::for('login', function ($job) {

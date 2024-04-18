@@ -24,7 +24,7 @@ Route::get('/sebet', [CardController::class, 'card'])->name('card');
 Route::get('/faktura', [CheckoutController::class, 'checkout'])->name('checkout');
 
 /* ---Admin--- */
-Route::prefix('admin')->name('admin.')->group(function (){
+Route::prefix('admin')->middleware('auth')->name('admin.')->group(function (){
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 });
 
@@ -38,3 +38,5 @@ Route::middleware('throttle:login')->group(function (){
     Route::get('/daxil-ol', [LoginController::class, 'showForm'])->name('login');
     Route::post('/daxil-ol', [LoginController::class, 'login']);
 });
+
+Route::get('/testiq/{token}', [RegisterController::class, 'verify'])->name('register.verify');

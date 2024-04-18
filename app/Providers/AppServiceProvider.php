@@ -2,10 +2,21 @@
 
 namespace App\Providers;
 
+use App\Events\UserRegisterEvent;
+use App\Listeners\UserRegisterListener;
+use App\Models\User;
+use App\Observers\UserObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+
+    protected $listen = [
+        UserRegisterEvent::class => [
+            UserRegisterListener::class,
+        ]
+    ];
+
     /**
      * Register any application services.
      */
@@ -19,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+//        User::observe(UserObserver::class);
     }
 }
