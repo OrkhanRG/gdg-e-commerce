@@ -29,8 +29,12 @@ Route::prefix('admin')->name('admin.')->group(function (){
 });
 
 //Auth
-Route::get('/qeydiyyat', [RegisterController::class, 'showForm'])->name('register');
-Route::post('/qeydiyyat', [RegisterController::class, 'register']);
+Route::middleware('throttle:registration')->group(function (){
+    Route::get('/qeydiyyat', [RegisterController::class, 'showForm'])->name('register');
+    Route::post('/qeydiyyat', [RegisterController::class, 'register']);
+});
 
-Route::get('/daxil-ol', [LoginController::class, 'showForm'])->name('login');
-Route::post('/daxil-ol', [LoginController::class, 'login']);
+Route::middleware('throttle:login')->group(function (){
+    Route::get('/daxil-ol', [LoginController::class, 'showForm'])->name('login');
+    Route::post('/daxil-ol', [LoginController::class, 'login']);
+});

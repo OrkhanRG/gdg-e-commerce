@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
+    <link rel="stylesheet" href="{{ asset('assets/vendors/sweetalert2/sweetalert2.min.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,6 +41,7 @@
 <script src="{{ asset('assets/swiper/swiper-bundle.min.js') }}"></script>
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <script src="{{ asset('assets/js/home.js') }}"></script>
+<script src="{{ asset('assets/vendors/sweetalert2/sweetalert2.min.js') }}"></script>
 @stack('js')
 </body>
 </html>
