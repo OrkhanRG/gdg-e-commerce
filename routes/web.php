@@ -39,4 +39,6 @@ Route::middleware('throttle:login')->group(function (){
     Route::post('/daxil-ol', [LoginController::class, 'login']);
 });
 
+Route::post('/cixis', [LoginController::class, 'logout'])->name('logout');
+
 Route::get('/testiq/{token}', [RegisterController::class, 'verify'])->name('register.verify');

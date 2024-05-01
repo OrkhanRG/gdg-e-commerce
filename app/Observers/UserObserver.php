@@ -26,7 +26,7 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        //
+        Cache::forget('verify_token_'.request()->token);
     }
 
     /**

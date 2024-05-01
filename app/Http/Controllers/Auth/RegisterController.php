@@ -46,8 +46,6 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        Cache::forget('verify_token_'.$request->token);
-
         alert()->success('Uğurlu!','Təbriklər! E-mailiniz təsdiq olundu!');
         return redirect()->route('admin.index');
     }

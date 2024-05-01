@@ -8,10 +8,11 @@
     <div class="auth-form-wrapper px-4 py-5">
         <a href="#" class="noble-ui-logo d-block mb-2">E-<span>Commerce</span></a>
         <h5 class="text-muted fw-normal mb-4">Buradan hesabınıza daxil ola bilərsiniz.</h5>
-        <form class="forms-sample">
+        <form action="{{ route('login') }}" method="POST" class="forms-sample formLogin">
+            @csrf
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail</label>
-                <input type="email" class="form-control" name="email" id="email" placeholder="Email ünvanınız">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Email ünvanınız" value="{{ old('email') }}">
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Şifrə</label>
@@ -36,4 +37,5 @@
 @endsection
 
 @push('js')
+    <script src="{{ asset('assets/js/auth/login.js') }}"></script>
 @endpush
