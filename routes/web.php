@@ -41,4 +41,7 @@ Route::middleware('throttle:login')->group(function (){
 
 Route::post('/cixis', [LoginController::class, 'logout'])->name('logout');
 
+Route::get('/verify', [RegisterController::class, 'verifyMailForm'])->name('verify-mail');
+Route::post('/verify', [RegisterController::class, 'verifyMail']);
+
 Route::get('/testiq/{token}', [RegisterController::class, 'verify'])->name('register.verify');

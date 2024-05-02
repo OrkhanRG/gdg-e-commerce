@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\UserWelcomeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -58,4 +61,5 @@ class LoginController extends Controller
         alert()->success('Təbriklər!','Hesabınızdan uğurla çıxış etdiniz!');
         return redirect()->route('login');
     }
+
 }

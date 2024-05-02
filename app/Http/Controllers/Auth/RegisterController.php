@@ -6,9 +6,11 @@ use App\Events\UserRegisterEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Notifications\UserWelcomeNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -48,5 +50,30 @@ class RegisterController extends Controller
 
         alert()->success('Uğurlu!','Təbriklər! E-mailiniz təsdiq olundu!');
         return redirect()->route('admin.index');
+    }
+
+    public function verifyMailForm()
+    {
+        return view('mail.verify');
+    }
+
+
+    public function verifyMail(Request $request)
+    {
+        $user = User::query()->where('email', $request->only('email'))->firstOrFail();
+
+        if ($user->hasVerifiedEmail())
+        {
+            alert()->warning('Diqqət!','Daxil etdiyiniz mail zatən doğrulanmışdır!');
+            return redirect()->back();
+        }
+
+        $token = Str::random(40);
+        Cache::put('verify_token_'.$token,$user->id, 3600);
+
+        $user->notify(new UserWelcomeNotification($token));
+
+        alert()->success('Təbriklər!','Doğrulama maili göndərildi!');
+        return back();
     }
 }

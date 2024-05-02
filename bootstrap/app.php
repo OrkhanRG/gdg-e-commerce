@@ -10,6 +10,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+    ->withCommands([\App\Console\Commands\SendMailVerifyCommand::class])
     ->withMiddleware(function (Middleware $middleware) {
         //
     })
