@@ -51,7 +51,13 @@ class LoginController extends Controller
         }
 
         alert()->success('Təbriklər!','Hesaba uğurla daxil oldunuz!');
-        return redirect()->intended(route('admin.index'));
+
+        if($user->hasRole(['super-admin', 'category-manager', 'product-manager', 'order-manager', 'user-manager']))
+        {
+            return redirect()->route('admin.index');
+        }
+
+        return redirect()->intended('/sifarislerim');
     }
 
     public function logout()
