@@ -120,6 +120,22 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        if (!$category)
+        {
+            alert()->error('Diqqət!','Kateqoriya Tapılmadı!');
+            return redirect()->back();
+        }
+
+        $delete = $category->delete();
+
+        if (!$delete)
+        {
+            alert()->warning('Diqqət!','Kateqoriya Silinmədi!');
+            return redirect()->back();
+        }
+
+        alert()->success('Uğurlu!','Kateqoriya Silindi!');
+        return redirect()->back();
     }
+
 }

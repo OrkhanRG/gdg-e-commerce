@@ -36,14 +36,20 @@
                                 <a href="{{ route('admin.category.edit', ['category' => $category->id]) }}" class="text-warning">
                                     <i data-feather="edit"></i>
                                 </a>
-                                <a href="{{ route('admin.category.destroy', ['category' => $category->id]) }}" class="text-danger">
-                                    <i data-feather="trash"></i>
+                                <a href="javascript:void(0)" class="text-danger">
+                                    <i data-id="{{ $category->id }}" data-name="{{ $category->name }}" class="btn-delete-category" data-feather="trash"></i>
                                 </a>
                             </td>
                         </tr>
                     @endforeach
                     </tbody>
                 </table>
+
+                <form action="" method="POST" id="formDelete">
+                    @csrf
+                    @method('DELETE')
+                </form>
+
                 <div class="col-6 mx-auto mt-3">
                     {{ $categories->links() }}
                 </div>
@@ -53,4 +59,36 @@
 @endsection
 
 @push('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let formDelete = document.querySelector('#formDelete');
+            let table = document.querySelector('.table')
+
+            table.addEventListener('click', function (event) {
+                let element = event.target;
+                if (element.classList.contains('btn-delete-category'))
+                {
+                    let name = element.getAttribute('data-name');
+                    let categoryID = element.getAttribute('data-id');
+                    let action = "{{ route('admin.category.destroy', ['category' => 'categoryID']) }}";
+                    action = action.replace('categoryID', categoryID);
+                    formDelete.action = action;
+
+                    Swal.fire({
+                        title: name + " kateqoriyasını silmək istədiyinizə əminsiniz?",
+                        showCancelButton: true,
+                        cancelButtonText: "Ləğv Et",
+                        confirmButtonText: "Sil",
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            formDelete.submit();
+                        } else if (result.isDenied) {
+                            Swal.fire("Kateqoriya Silinmədi!", "", "info");
+                        }
+                    });
+                }
+            })
+        })
+    </script>
 @endpush
