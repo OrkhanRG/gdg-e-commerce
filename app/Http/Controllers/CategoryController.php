@@ -13,7 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('admin.category.index');
+        $categories = Category::orderBy('id', 'desc')->paginate(10);
+        return view('admin.category.index', compact('categories'));
     }
 
     /**
@@ -74,7 +75,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        $categories = Category::all();
+        return view('admin.category.create_edit', compact('category', 'categories'));
     }
 
     /**
@@ -82,7 +84,35 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $data = $request->only('name', 'short_description', 'description');
+
+        $slug = Str::slug($request->slug);
+
+        if (is_null($request->slug))
+        {
+            $slug = Str::slug(mb_substr($data['name'], 0, 70));
+            $check = Category::query()->where('slug', $slug)->first();
+
+            if ($check)
+            {
+                return redirect()->back()
+                    ->withErrors(['slug' => 'Daxil etdiyiniz Slug boşdur və ya başqa bir kateqoriyada istifadə olunur!'])
+                    ->withInput();
+            }
+        }
+
+        $data['slug'] = $slug;
+        $data['status'] = $request->has('status');
+
+        if ($request->parent_id != -1)
+        {
+            $data['parent_id'] = $request->parent_id;
+        }
+
+        $category->update($data);
+
+        alert()->success('Uğurlu!','Kateqoriya Güncəlləndi!');
+        return redirect()->route('admin.category.index');
     }
 
     /**

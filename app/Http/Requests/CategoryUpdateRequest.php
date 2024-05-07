@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class CategoryStoreRequest extends FormRequest
+class CategoryUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class CategoryStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:2', 'max:255'],
-            'slug' => ['sometimes', 'nullable', 'max:255', 'unique:categories,slug'],
+            'slug' => ['sometimes', 'nullable', 'max:255', 'unique:categories,slug,'.$this->category->id],
             'short_description' => ['sometimes', 'nullable', 'max:255'],
             'description' => ['sometimes', 'nullable', 'max:255'],
         ];
@@ -35,7 +35,7 @@ class CategoryStoreRequest extends FormRequest
         if (!is_null($this->slug))
         {
             $this->merge([
-                'slug' =>  Str::slug($this->slug)
+               'slug' =>  Str::slug($this->slug)
             ]);
         }
     }
