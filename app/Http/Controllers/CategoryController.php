@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -12,7 +13,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.category.index');
     }
 
     /**
@@ -20,7 +21,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('admin.category.create_edit', compact('categories'));
     }
 
     /**
@@ -28,7 +30,35 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->only('name', 'short_description', 'description');
+
+        $slug = Str::slug($request->slug);
+
+        if (is_null($request->slug))
+        {
+            $slug = Str::slug(mb_substr($data['name'], 0, 70));
+            $check = Category::query()->where('slug', $slug)->first();
+
+            if ($check)
+            {
+                return redirect()->back()
+                    ->withErrors(['slug' => 'Daxil etdiyiniz Slug boşdur və ya başqa bir kateqoriyada istifadə olunur!'])
+                    ->withInput();
+            }
+        }
+
+        $data['slug'] = $slug;
+        $data['status'] = $request->has('status');
+
+        if ($request->parent_id != -1)
+        {
+            $data['parent_id'] = $request->parent_id;
+        }
+
+        Category::create($data);
+
+        alert()->success('Uğurlu!','Kateqoriya Yaradıldı!');
+        return redirect()->route('admin.category.index');
     }
 
     /**

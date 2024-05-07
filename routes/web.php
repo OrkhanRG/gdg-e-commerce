@@ -8,6 +8,7 @@ use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\ProductController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /* ---Front--- */
@@ -26,6 +27,9 @@ Route::get('/faktura', [CheckoutController::class, 'checkout'])->name('checkout'
 /* ---Admin--- */
 Route::prefix('admin')->middleware(['auth', 'user-role-check'])->name('admin.')->group(function (){
     Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+    //category
+    Route::resource('/category', CategoryController::class);
 });
 
 //Auth
