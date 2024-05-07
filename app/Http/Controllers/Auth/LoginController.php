@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
@@ -66,6 +67,38 @@ class LoginController extends Controller
 
         alert()->success('Təbriklər!','Hesabınızdan uğurla çıxış etdiniz!');
         return redirect()->route('login');
+    }
+
+    public function socialiteAuth(string $driver)
+    {
+        return Socialite::driver($driver)->redirect();
+    }
+
+    public function socialiteAuthVerify(string $driver)
+    {
+        $user = Socialite::driver($driver)->user();
+
+        $userCheck = User::query()->where('email', $user->getEmail())->first();
+
+        if ($userCheck)
+        {
+            Auth::login($userCheck);
+
+            alert()->success('Təbriklər!','Hesabınıza daxil oldunuz!');
+            return redirect()->route('front.index');
+        }
+
+        $newUser = User::create([
+            'name' => $user->getName(),
+            'email' => $user->getEmail(),
+            'password' => bcrypt('12345'),
+            'email_verified_at' => now()
+        ]);
+
+        Auth::login($newUser);
+
+        alert()->success('Təbriklər!','Hesabınıza daxil oldunuz!');
+        return redirect()->route('front.index');
     }
 
 }

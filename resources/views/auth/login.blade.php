@@ -26,10 +26,10 @@
             </div>
             <div>
                 <a href="javascript:void(0)" class="btn btn-primary me-2 mb-2 mb-md-0 text-white btnLogin">Daxil Ol</a>
-                <button type="button" class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
+                <a href="{{ route('socialite-auth', 'google') }}" class="btn btn-outline-primary btn-icon-text mb-2 mb-md-0">
                     <i class="mdi mdi-google"></i>
                     Google ilə daxil ol
-                </button>
+                </a>
             </div>
             <a href="{{ route('register') }}" class="d-block mt-3 text-muted">Hesabınız yoxdur? Qeydiyyat</a>
         </form>

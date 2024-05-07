@@ -24,20 +24,23 @@ Route::get('/sebet', [CardController::class, 'card'])->name('card');
 Route::get('/faktura', [CheckoutController::class, 'checkout'])->name('checkout');
 
 /* ---Admin--- */
-Route::prefix('admin')->middleware('auth')->name('admin.')->group(function (){
+Route::prefix('admin')->middleware(['auth', 'user-role-check'])->name('admin.')->group(function (){
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 });
 
 //Auth
-Route::middleware('throttle:registration')->group(function (){
+Route::middleware(['throttle:registration', 'guest'])->group(function (){
     Route::get('/qeydiyyat', [RegisterController::class, 'showForm'])->name('register');
     Route::post('/qeydiyyat', [RegisterController::class, 'register']);
 });
 
-Route::middleware('throttle:login')->group(function (){
+Route::middleware(['throttle:login', 'guest'])->group(function (){
     Route::get('/daxil-ol', [LoginController::class, 'showForm'])->name('login');
     Route::post('/daxil-ol', [LoginController::class, 'login']);
 });
+
+Route::get('/auth/{driver}', [LoginController::class, 'socialiteAuth'])->name('socialite-auth');
+Route::get('/auth/{driver}/callback', [LoginController::class, 'socialiteAuthVerify'])->name('socialite-auth-verify');
 
 Route::post('/cixis', [LoginController::class, 'logout'])->name('logout');
 

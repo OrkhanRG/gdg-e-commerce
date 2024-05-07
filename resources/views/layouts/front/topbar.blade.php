@@ -2,9 +2,19 @@
     <div class="container">
         <div class="login float-end ">
             <ul class="login-list">
-                <li><a href="{{ route('login') }}" class="text-white">Daxil Ol</a></li>
-                <li><a href="{{ route('register') }}" class="text-white">Qeydiyyat</a></li>
-                <li><a href="" class="text-white">Sifarişlərim</a></li>
+                @guest()
+                    <li><a href="{{ route('login') }}" class="text-white">Daxil Ol</a></li>
+                    <li><a href="{{ route('register') }}" class="text-white">Qeydiyyat</a></li>
+                @endguest
+                @auth()
+                        <li>
+                            <a href="javascript:void(0)" class="text-warning">
+                                <i class="bi bi-person-circle" style="font-size: 15px; margin-right: 3px"></i>
+                                {{ auth()->user()->name }}
+                            </a>
+                        </li>
+                        <li><a href="" class="text-white">Sifarişlərim</a></li>
+                @endauth
                 <li><a href="" class="text-white">Səbətim</a></li>
                 <li class="dropdown user-basket position-relative">
                     <a href="javascript:void(0)" class="dropdown-toggle position-relative"
