@@ -138,4 +138,32 @@ class CategoryController extends Controller
         return redirect()->back();
     }
 
+    public function changeStatus(Request $request)
+    {
+        $categoryID = $request->id;
+
+        $category = Category::query()->find($categoryID);
+
+        if (is_null($category))
+        {
+            return response()
+                ->json()
+                ->setData(['message' => 'Kateqoriya Tapılmadı'])
+                ->setStatusCode(404)
+                ->setCharset('utf-8')
+                ->header('Content-Type', 'application/json')
+                ->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+        }
+
+        $category->status = !$category->status;
+        $category->save();
+
+        return response()
+            ->json()
+            ->setData($category)
+            ->setStatusCode(200)
+            ->setCharset('utf-8')
+            ->header('Content-Type', 'application/json')
+            ->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
 }

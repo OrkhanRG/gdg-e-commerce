@@ -30,6 +30,7 @@ Route::prefix('admin')->middleware(['auth', 'user-role-check'])->name('admin.')-
 
     //category
     Route::resource('/category', CategoryController::class);
+    Route::post('/category/change-status', [CategoryController::class, 'changeStatus'])->name('category.change-status');
 });
 
 //Auth

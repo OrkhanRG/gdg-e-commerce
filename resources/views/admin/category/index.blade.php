@@ -66,6 +66,7 @@
 
             table.addEventListener('click', function (event) {
                 let element = event.target;
+
                 if (element.classList.contains('btn-delete-category'))
                 {
                     let name = element.getAttribute('data-name');
@@ -85,6 +86,43 @@
                             formDelete.submit();
                         } else if (result.isDenied) {
                             Swal.fire("Kateqoriya Silinmədi!", "", "info");
+                        }
+                    });
+                }
+
+                if (element.classList.contains('btn-change-status'))
+                {
+                    let id = element.getAttribute('data-id');
+
+                    fetch("{{ route('admin.category.change-status') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            id: id
+                        })
+                    }).then(response => {
+                        if (!response.ok)
+                        {
+                            Swal.fire("Kateqoriya silinmədi.", "Diqqət.", "info");
+                            console.log(response.json());
+                        }
+
+                        return response.json();
+                    }).then(data => {
+                        element.textContent = data.status ? 'Aktiv' : 'Passiv';
+
+                        if (data.status)
+                        {
+                            element.classList.remove('btn-inverse-danger');
+                            element.classList.add('btn-inverse-success');
+                        }
+                        else
+                        {
+                            element.classList.remove('btn-inverse-success');
+                            element.classList.add('btn-inverse-danger');
                         }
                     });
                 }
