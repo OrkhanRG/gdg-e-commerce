@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryStoreRequest;
+use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
 use App\Services\CategoryService;
 use Illuminate\Contracts\Foundation\Application;
@@ -89,7 +90,7 @@ class CategoryController extends Controller
      * @param Category $category
      * @return RedirectResponse
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryUpdateRequest $request, Category $category)
     {
         try
         {
