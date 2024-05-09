@@ -2,150 +2,148 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryStoreRequest;
 use App\Models\Category;
+use App\Services\CategoryService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Throwable;
 
 class CategoryController extends Controller
 {
+    public function __construct(public CategoryService $categoryService)
+    {
+    }
+
+
     /**
-     * Display a listing of the resource.
+     * @return Application|Factory|View|\Illuminate\Foundation\Application|\Illuminate\View\View
      */
     public function index()
     {
-        $categories = Category::orderBy('id', 'desc')->paginate(10);
+        $categories = $this->categoryService->getAllCategoriesPaginate();
         return view('admin.category.index', compact('categories'));
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * @return Application|Factory|View|\Illuminate\Foundation\Application|\Illuminate\View\View
      */
     public function create()
     {
-        $categories = Category::all();
+        $categories = $this->categoryService->getAllCategories();
         return view('admin.category.create_edit', compact('categories'));
     }
 
+
     /**
-     * Store a newly created resource in storage.
+     * @param CategoryStoreRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        $data = $request->only('name', 'short_description', 'description');
-
-        $slug = Str::slug($request->slug);
-
-        if (is_null($request->slug))
+        try
         {
-            $slug = Str::slug(mb_substr($data['name'], 0, 70));
-            $check = Category::query()->where('slug', $slug)->first();
+            $this->categoryService->prepareDataRequest()->create();
 
-            if ($check)
-            {
-                return redirect()->back()
-                    ->withErrors(['slug' => 'Daxil etdiyiniz Slug boşdur və ya başqa bir kateqoriyada istifadə olunur!'])
-                    ->withInput();
-            }
+            alert()->success('Uğurlu!', 'Kateqoriya Yaradıldı!');
+            return redirect()->route('admin.category.index');
+
         }
-
-        $data['slug'] = $slug;
-        $data['status'] = $request->has('status');
-
-        if ($request->parent_id != -1)
+        catch (Throwable $exception)
         {
-            $data['parent_id'] = $request->parent_id;
+           return $this->exceptionCategory($exception, 'Kateqoriya yaradılmadı!');
         }
-
-        Category::create($data);
-
-        alert()->success('Uğurlu!','Kateqoriya Yaradıldı!');
-        return redirect()->route('admin.category.index');
     }
 
+
     /**
-     * Display the specified resource.
+     * @param Category $category
+     * @return void
      */
     public function show(Category $category)
     {
         //
     }
 
+
     /**
-     * Show the form for editing the specified resource.
+     * @param Category $category
+     * @return Application|Factory|View|\Illuminate\Foundation\Application|\Illuminate\View\View
      */
     public function edit(Category $category)
     {
-        $categories = Category::all();
+        $categories = $this->categoryService->getAllCategories();
         return view('admin.category.create_edit', compact('category', 'categories'));
     }
 
+
     /**
-     * Update the specified resource in storage.
+     * @param Request $request
+     * @param Category $category
+     * @return RedirectResponse
      */
     public function update(Request $request, Category $category)
     {
-        $data = $request->only('name', 'short_description', 'description');
-
-        $slug = Str::slug($request->slug);
-
-        if (is_null($request->slug))
+        try
         {
-            $slug = Str::slug(mb_substr($data['name'], 0, 70));
-            $check = Category::query()->where('slug', $slug)->first();
+            $this->categoryService->setCategory($category)->prepareDataRequest()->update();
 
-            if ($check)
-            {
-                return redirect()->back()
-                    ->withErrors(['slug' => 'Daxil etdiyiniz Slug boşdur və ya başqa bir kateqoriyada istifadə olunur!'])
-                    ->withInput();
-            }
+            alert()->success('Uğurlu!', 'Kateqoriya Güncəlləndi!');
+            return redirect()->route('admin.category.index');
+
         }
-
-        $data['slug'] = $slug;
-        $data['status'] = $request->has('status');
-
-        if ($request->parent_id != -1)
+        catch (Throwable $exception)
         {
-            $data['parent_id'] = $request->parent_id;
+            return $this->exceptionCategory($exception, 'Kateqoriya Güncəllənmədi!');
         }
-
-        $category->update($data);
-
-        alert()->success('Uğurlu!','Kateqoriya Güncəlləndi!');
-        return redirect()->route('admin.category.index');
     }
 
+
     /**
-     * Remove the specified resource from storage.
+     * @param Category $category
+     * @return RedirectResponse
      */
     public function destroy(Category $category)
     {
-        if (!$category)
+        try
         {
-            alert()->error('Diqqət!','Kateqoriya Tapılmadı!');
+            $delete = $this->categoryService->setCategory($category)->delete12();
+
+            if (!$delete)
+            {
+                alert()->warning('Diqqət!', 'Kateqoriya Silinmədi!');
+                return redirect()->back();
+            }
+
+            alert()->success('Uğurlu!', 'Kateqoriya Silindi!');
             return redirect()->back();
         }
-
-        $delete = $category->delete();
-
-        if (!$delete)
+        catch (Throwable $exception)
         {
-            alert()->warning('Diqqət!','Kateqoriya Silinmədi!');
-            return redirect()->back();
+           return $this->exceptionCategory($exception, 'Kateqoriya Silinmədi!');
         }
 
-        alert()->success('Uğurlu!','Kateqoriya Silindi!');
-        return redirect()->back();
+
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function changeStatus(Request $request)
     {
         $categoryID = $request->id;
 
-        $category = Category::query()->find($categoryID);
+        $category = $this->categoryService->getById($categoryID);
 
-        if (is_null($category))
-        {
+        if (is_null($category)) {
             return response()
                 ->json()
                 ->setData(['message' => 'Kateqoriya Tapılmadı'])
@@ -155,8 +153,8 @@ class CategoryController extends Controller
                 ->setEncodingOptions(JSON_UNESCAPED_UNICODE);
         }
 
-        $category->status = !$category->status;
-        $category->save();
+        $data = ['status' => !$category->status];
+        $this->categoryService->setCategory($category)->setPrepareData($data)->update();
 
         return response()
             ->json()
@@ -165,5 +163,26 @@ class CategoryController extends Controller
             ->setCharset('utf-8')
             ->header('Content-Type', 'application/json')
             ->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * @param $exception
+     * @param $errorDescription
+     * @return RedirectResponse
+     */
+    public function exceptionCategory($exception, $errorDescription = 'Xəta yarandı!')
+    {
+        alert()->error('Xəta!', $errorDescription);
+
+        if ($exception->getCode() == 400)
+        {
+            return redirect()
+                ->back()
+                ->withErrors(['slug' => $exception->getMessage()])
+                ->withInput();
+        }
+
+        Log::error($exception->getMessage(), [$exception->getTraceAsString()]);
+        return redirect()->back();
     }
 }

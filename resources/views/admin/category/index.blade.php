@@ -124,6 +124,7 @@
                             element.classList.remove('btn-inverse-success');
                             element.classList.add('btn-inverse-danger');
                         }
+                        Swal.fire("Status " + element.textContent + " olara güncəlləndi", "Uğurlu!", "success")
                     });
                 }
             })
