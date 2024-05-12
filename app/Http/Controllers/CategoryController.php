@@ -6,6 +6,7 @@ use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Category;
 use App\Services\CategoryService;
+use App\Traits\myException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -18,6 +19,7 @@ use Throwable;
 
 class CategoryController extends Controller
 {
+    use myException;
     public function __construct(public CategoryService $categoryService)
     {
     }
@@ -59,7 +61,7 @@ class CategoryController extends Controller
         }
         catch (Throwable $exception)
         {
-           return $this->exceptionCategory($exception, 'Kateqoriya yaradılmadı!');
+           return $this->exception($exception, 'Kateqoriya yaradılmadı!');
         }
     }
 
@@ -102,7 +104,7 @@ class CategoryController extends Controller
         }
         catch (Throwable $exception)
         {
-            return $this->exceptionCategory($exception, 'Kateqoriya Güncəllənmədi!');
+            return $this->exception($exception, 'Kateqoriya Güncəllənmədi!');
         }
     }
 
@@ -115,7 +117,7 @@ class CategoryController extends Controller
     {
         try
         {
-            $delete = $this->categoryService->setCategory($category)->delete12();
+            $delete = $this->categoryService->setCategory($category)->delete();
 
             if (!$delete)
             {
@@ -128,7 +130,7 @@ class CategoryController extends Controller
         }
         catch (Throwable $exception)
         {
-           return $this->exceptionCategory($exception, 'Kateqoriya Silinmədi!');
+           return $this->exception($exception, 'Kateqoriya Silinmədi!');
         }
 
 
@@ -166,24 +168,4 @@ class CategoryController extends Controller
             ->setEncodingOptions(JSON_UNESCAPED_UNICODE);
     }
 
-    /**
-     * @param $exception
-     * @param $errorDescription
-     * @return RedirectResponse
-     */
-    public function exceptionCategory($exception, $errorDescription = 'Xəta yarandı!')
-    {
-        alert()->error('Xəta!', $errorDescription);
-
-        if ($exception->getCode() == 400)
-        {
-            return redirect()
-                ->back()
-                ->withErrors(['slug' => $exception->getMessage()])
-                ->withInput();
-        }
-
-        Log::error($exception->getMessage(), [$exception->getTraceAsString()]);
-        return redirect()->back();
-    }
 }

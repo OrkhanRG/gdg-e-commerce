@@ -12,26 +12,43 @@
     <div class="sidebar-body">
         <ul class="nav">
             <li class="nav-item nav-category">Main</li>
-            <li class="nav-item">
+            <li class="nav-item {{ Route::is('admin.index') ? 'active' : '' }}">
                 <a href="{{ route('admin.index') }}" class="nav-link">
                     <i class="link-icon" data-feather="box"></i>
                     <span class="link-title">Dashboard</span>
                 </a>
             </li>
-            <li class="nav-item nav-category">Kateqoriya</li>
-            <li class="nav-item">
+            <li class="nav-item nav-category">Actions</li>
+            <li class="nav-item {{ Route::is('admin.category.index') || Route::is('admin.category.create') ? 'active' : '' }}">
                 <a class="nav-link" data-bs-toggle="collapse" href="#category" role="button" aria-expanded="false" aria-controls="category">
-                    <i class="link-icon" data-feather="book-open"></i>
+                    <i class="link-icon" data-feather="list"></i>
                     <span class="link-title ">Kateqoriya</span>
                     <i class="link-arrow" data-feather="chevron-down"></i>
                 </a>
-                <div class="collapse" id="category">
+                <div class="collapse {{ Route::is('admin.category.index') || Route::is('admin.category.create') ? 'show' : '' }}" id="category">
                     <ul class="nav sub-menu">
                         <li class="nav-item">
-                            <a href="{{ route('admin.category.index') }}" class="nav-link">List</a>
+                            <a href="{{ route('admin.category.index') }}" class="nav-link {{ Route::is('admin.category.index') ? 'active' : '' }}">List</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.category.create') }}" class="nav-link">Yeni Kateqoriya</a>
+                            <a href="{{ route('admin.category.create') }}" class="nav-link {{ Route::is('admin.category.create') ? 'active' : '' }}">Yeni Kateqoriya</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item {{ Route::is('admin.brand.index') || Route::is('admin.brand.create') ? 'active' : '' }}">
+                <a class="nav-link" data-bs-toggle="collapse" href="#brand" role="button" aria-expanded="false" aria-controls="brand">
+                    <i class="link-icon" data-feather="bold"></i>
+                    <span class="link-title ">Brendlər</span>
+                    <i class="link-arrow" data-feather="chevron-down"></i>
+                </a>
+                <div class="collapse {{ Route::is('admin.brand.index') || Route::is('admin.brand.create') ? 'show' : '' }}" id="brand">
+                    <ul class="nav sub-menu">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.brand.index') }}" class="nav-link {{ Route::is('admin.brand.index') ? 'active' : '' }}">List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.brand.create') }}" class="nav-link {{ Route::is('admin.brand.create') ? 'active' : '' }}">Yeni Brend</a>
                         </li>
                     </ul>
                 </div>
