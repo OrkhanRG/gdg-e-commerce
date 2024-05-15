@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -8,8 +10,7 @@ use App\Http\Controllers\Front\CheckoutController;
 use App\Http\Controllers\Front\FrontController;
 use App\Http\Controllers\Front\OrderController;
 use App\Http\Controllers\Front\ProductController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use Illuminate\Support\Facades\Route;
 
 /* ---Front--- */
@@ -48,6 +49,22 @@ Route::prefix('admin')->middleware(['auth', 'user-role-check'])->name('admin.')-
 
         Route::post('/brand/change-status', [BrandController::class, 'changeStatus'])->name('change-status');
         Route::post('/brand/change-is-featured', [BrandController::class, 'changeIsFeatured'])->name('change-is-featured');
+    });
+
+    Route::prefix('/product')->name('product.')->group(function (){
+
+        Route::get('/', [AdminProductController::class, 'index'])->name('index');
+
+        Route::get('/create', [AdminProductController::class, 'create'])->name('create');
+        Route::post('/create', [AdminProductController::class, 'store'])->name('store');
+
+        Route::get('/update/{product}', [AdminProductController::class, 'edit'])->name('edit');
+        Route::put('/update/{product}', [AdminProductController::class, 'update'])->name('update');
+
+        Route::delete('/delete/{product}', [AdminProductController::class, 'delete'])->name('delete');
+
+//        Route::post('/product/change-status', [AdminProductController::class, 'changeStatus'])->name('change-status');
+//        Route::post('/product/change-is-featured', [AdminProductController::class, 'changeIsFeatured'])->name('change-is-featured');
     });
 });
 

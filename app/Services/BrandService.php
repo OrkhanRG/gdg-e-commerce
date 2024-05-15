@@ -45,12 +45,12 @@ class BrandService
         return $this->brand::query()->find($id);
     }
 
-/*    public function getAllBrands(): Collection
+    public function getAllBrands($orderBy = ['order', 'desc']): Collection
     {
-        return $this->brand::all();
-    }*/
+        return $this->brand::orderBy($orderBy[0], $orderBy[1])->get();
+    }
 
-    public function getAllBrandsPaginate(int $page=10, array $orderBy=['id', 'DESC']): LengthAwarePaginator
+    public function getAllBrandsPaginate(int $page=10, array $orderBy=['order', 'DESC']): LengthAwarePaginator
     {
         return $this->brand::query()->orderBy($orderBy[0], $orderBy[1])->paginate($page);
     }
