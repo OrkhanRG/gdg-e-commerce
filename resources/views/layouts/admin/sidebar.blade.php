@@ -53,6 +53,23 @@
                     </ul>
                 </div>
             </li>
+            <li class="nav-item {{ Route::is('admin.product.index') || Route::is('admin.product.create') ? 'active' : '' }}">
+                <a class="nav-link" data-bs-toggle="collapse" href="#product" role="button" aria-expanded="false" aria-controls="product">
+                    <i class="link-icon" data-feather="briefcase"></i>
+                    <span class="link-title ">Məhsullar</span>
+                    <i class="link-arrow" data-feather="chevron-down"></i>
+                </a>
+                <div class="collapse {{ Route::is('admin.product.index') || Route::is('admin.product.create') ? 'show' : '' }}" id="product">
+                    <ul class="nav sub-menu">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.product.index') }}" class="nav-link {{ Route::is('admin.product.index') ? 'active' : '' }}">List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.product.create') }}" class="nav-link {{ Route::is('admin.product.create') ? 'active' : '' }}">Yeni Məhsul</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
         </ul>
     </div>
 </nav>
