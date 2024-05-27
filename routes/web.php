@@ -51,6 +51,7 @@ Route::prefix('admin')->middleware(['auth', 'user-role-check'])->name('admin.')-
         Route::post('/brand/change-is-featured', [BrandController::class, 'changeIsFeatured'])->name('change-is-featured');
     });
 
+    //product
     Route::prefix('/product')->name('product.')->group(function (){
 
         Route::get('/', [AdminProductController::class, 'index'])->name('index');
@@ -63,11 +64,14 @@ Route::prefix('admin')->middleware(['auth', 'user-role-check'])->name('admin.')-
 
         Route::delete('/delete/{product}', [AdminProductController::class, 'delete'])->name('delete');
 
+        Route::post('/check-slug', [AdminProductController::class, 'checkSlug'])->name('check-slug');
+
 //        Route::post('/product/change-status', [AdminProductController::class, 'changeStatus'])->name('change-status');
 //        Route::post('/product/change-is-featured', [AdminProductController::class, 'changeIsFeatured'])->name('change-is-featured');
     });
 
-    Route::group(['prefix' => 'ecommerce-filemanager', 'middleware' => ['web', 'auth']], function () {
+    //file-manager
+    Route::group(['prefix' => 'gdg-filemanager', 'middleware' => ['web', 'auth']], function () {
         \UniSharp\LaravelFilemanager\Lfm::routes();
     });
 });
