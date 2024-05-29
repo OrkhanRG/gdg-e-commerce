@@ -4,15 +4,21 @@
     "description": "The skeleton application for the Laravel framework.",
     "keywords": ["laravel", "framework"],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/OrkhanRG/laravel-filemanager.git"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "intervention/image-laravel": "^1.2",
         "laravel/framework": "^11.0",
         "laravel/socialite": "^5.13",
         "laravel/tinker": "^2.9",
+        "orkhanrg/laravel-filemanager": "^1.0",
         "realrashid/sweet-alert": "^7.1",
-        "spatie/laravel-permission": "^6.7",
-        "unisharp/laravel-filemanager": "^2.9"
+        "spatie/laravel-permission": "^6.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
